@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const boardControllers = require("../controllers/boardControllers");
-const passport = require("passport");
 
+const passport = require("passport");
 const authentication = passport.authenticate("jwt", { session: false });
+
+const boardControllers = require("../controllers/boardControllers");
 
 router.get("/", authentication, boardControllers.getBoardList);
 router.get("/history", authentication, boardControllers.getHistoryList);

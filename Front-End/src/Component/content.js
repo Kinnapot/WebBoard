@@ -6,25 +6,25 @@ const { Text } = Typography;
 
 function Content(props) {
   //ตัวแปร
-  const [changNote, setChangNote] = useState("");
-  const [changCatagory, setChangCatagory] = useState("");
+  const [changeNote, setChangeNote] = useState("");
+  const [changeCategory, setChangeCategory] = useState("");
   const [isEdit, setIsEdit] = useState(false);
 
   //Update
   const updateData = async (id) => {
     await axios.put(`/board/${id}`, {
-      note: changNote,
-      catagory: changCatagory,
+      note: changeNote,
+      category: changeCategory,
     });
     props.fetchData();
     setIsEdit(false);
-    setChangNote("");
-    setChangCatagory("");
+    setChangeNote("");
+    setChangeCategory("");
   };
 
   const toggleEdit = () => {
-    setChangNote(props.todo.note);
-    setChangCatagory(props.todo.catagory);
+    setChangeNote(props.todo.note);
+    setChangeCategory(props.todo.category);
     setIsEdit(true);
   };
 
@@ -32,14 +32,14 @@ function Content(props) {
     <Row style={{ width: "100%" }}>
       <Col span={10}>
         <Input
-          value={changNote}
-          onChange={(e) => setChangNote(e.target.value)}
+          value={changeNote}
+          onChange={(e) => setChangeNote(e.target.value)}
         />
       </Col>
       <Col span={10}>
         <Input
-          value={changCatagory}
-          onChange={(e) => setChangCatagory(e.target.value)}
+          value={changeCategory}
+          onChange={(e) => setChangeCategory(e.target.value)}
         />
       </Col>
       <Col span={4}>
@@ -59,7 +59,7 @@ function Content(props) {
               <Text strong>ID:</Text> {props.todo.id}
               <Text strong>Time:</Text> {props.todo.time}
               <Text strong>Note:</Text> {props.todo.note}
-              <Text strong>Category:</Text> {props.todo.catagory}
+              <Text strong>Category:</Text> {props.todo.category}
             </Space>
           </Row>
         </Col>

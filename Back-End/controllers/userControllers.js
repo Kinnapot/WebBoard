@@ -1,29 +1,40 @@
-let users = [];
+// data base for id password
+const { dataUsers } = require("../model/dataUsers")
 
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-//Post สมัครสมาชิค
+//Function Post for register
 const registerUser = async (req, res) => {
   const { username, password, name } = req.body;
-  const targetUser = await users.find((user) => user.username === username);
+
+  const targetUser = await dataUsers.find((user) => user.username === username);
+
   if (targetUser) {
     res.status(400).send({ message: "Username already taken." });
   } else {
+    // bycypt system for hashpassword 
     const salt = bcryptjs.genSaltSync(12);
     const hashedPassword = bcryptjs.hashSync(password, salt);
-    users.push({ username, hashedPassword, name });
+
+    dataUsers.push({ username, hashedPassword, name });
     res.status(201).send("User created");
   }
 };
 
-//Post Login
+//Function Post for Login
 const loginUser = async (req, res) => {
+
   const { username, password } = req.body;
-  const targetUser = await users.find((user) => user.username === username);
+
+
+  const targetUser = await dataUsers.find((user) => user.username === username);
+
   if (!targetUser) {
     res.status(400).send({ message: "username or password is wrong" });
   } else {
+
+    //bcrypt and JWT system
     const isCorrectPassword = bcryptjs.compareSync(
       password,
       targetUser.hashedPassword
@@ -33,8 +44,10 @@ const loginUser = async (req, res) => {
         name: targetUser.name,
         id: targetUser.username,
       };
-      const token = jwt.sign(payload, process.env.SECRET_OR_KEY , { expiresIn: 3600 });
 
+      const token = jwt.sign(payload, process.env.SECRET_OR_KEY, {
+        expiresIn: 3600,
+      });
       res.status(200).send({
         token: token,
         message: "Login successful",
@@ -48,5 +61,4 @@ const loginUser = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
-  users
 };

@@ -4,6 +4,7 @@ import PrivateRoutes from "./Component/private-routes/PrivateRoutes";
 import localStorageService from "./service/localStorageService";
 
 function App() {
+  
   const [role, setRole] = useState(localStorageService.getRole());
 
   return (

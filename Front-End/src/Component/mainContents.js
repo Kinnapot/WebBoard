@@ -8,21 +8,21 @@ const { Text } = Typography;
 function MainContents() {
   //กำหนดค่าตัวแปร CRUD
   const [todoList, setTodoList] = useState([]);
-  const [InputNote, setInputNote] = useState("");
-  const [InputCatagory, setInputCatagory] = useState("");
+  const [inputNote, setInputNote] = useState("");
+  const [inputCategory, setInputCategory] = useState("");
 
   //กำหนดตัวแปร Filter
-  const [InputFilUser, setInputFilUser] = useState("");
-  const [InputFilNote, setInputFilNote] = useState("");
-  const [InputFilCatagory, setInputFilCatagory] = useState("");
+  const [inputFilUser, setInputFilUser] = useState("");
+  const [inputFilNote, setInputFilNote] = useState("");
+  const [inputFilCategory, setInputFilCategory] = useState("");
 
   //GET Board
   const fetchData = async () => {
     const httptRespones = await axios.get("/board/", {
       params: {
-        filUser: InputFilUser,
-        filNote: InputFilNote,
-        filCatagory: InputFilCatagory,
+        filUser: inputFilUser,
+        filNote: inputFilNote,
+        filCategory: inputFilCategory,
       },
     });
     setTodoList(httptRespones.data);
@@ -31,17 +31,17 @@ function MainContents() {
   //ทำให้ข้อมูลแสดงเมือรีเฟรช browser
   useEffect(() => {
     fetchData();
-  }, [InputFilUser, InputFilNote, InputFilCatagory]);
+  }, [inputFilUser, inputFilNote, inputFilCategory]);
 
   //Create
   const addTodoItem = async () => {
     await axios.post("/board/", {
-      note: InputNote,
-      catagory: InputCatagory,
+      note: inputNote,
+      category: inputCategory,
     });
     fetchData();
     setInputNote("");
-    setInputCatagory("");
+    setInputCategory("");
   };
 
   //Delete
@@ -63,7 +63,7 @@ function MainContents() {
           </Col>
           <Col span={16}>
             <Input
-              value={InputFilUser}
+              value={inputFilUser}
               onChange={(e) => setInputFilUser(e.target.value)}
             />
           </Col>
@@ -74,7 +74,7 @@ function MainContents() {
           </Col>
           <Col span={16}>
             <Input
-              value={InputFilNote}
+              value={inputFilNote}
               onChange={(e) => setInputFilNote(e.target.value)}
             />
           </Col>
@@ -85,8 +85,8 @@ function MainContents() {
           </Col>
           <Col span={16}>
             <Input
-              value={InputFilCatagory}
-              onChange={(e) => setInputFilCatagory(e.target.value)}
+              value={inputFilCategory}
+              onChange={(e) => setInputFilCategory(e.target.value)}
             />
           </Col>
         </Row>
@@ -118,19 +118,19 @@ function MainContents() {
           </Col>
           <Col span={16}>
             <Input
-              value={InputNote}
+              value={inputNote}
               onChange={(e) => setInputNote(e.target.value)}
             />
           </Col>
         </Row>
         <Row>
           <Col span={6}>
-            <Text>Catagory</Text>
+            <Text>Category</Text>
           </Col>
           <Col span={16}>
             <Input
-              value={InputCatagory}
-              onChange={(e) => setInputCatagory(e.target.value)}
+              value={inputCategory}
+              onChange={(e) => setInputCategory(e.target.value)}
             />
           </Col>
         </Row>

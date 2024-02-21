@@ -1,30 +1,32 @@
 const { uniqueId } = require("lodash");
-let data = [];
-let history = [];
+const { dataBoard } = require("../model/dataBoard");
+const { dataHistory } = require("../model/dataHistory");
 
 //GetData
 const getBoardList = (req, res) => {
-  let filteredData = data;
-  const { filUser, filNote, filCatagory } = req.query;
+  let filteredBoard = dataBoard;
+  const { filUser, filNote, filCategory } = req.query;
 
   if (filUser) {
-    filteredData = filteredData.filter((item) => item.user.includes(filUser));
+    filteredBoard = filteredBoard.filter((item) => item.user && item.user.includes(filUser));
   }
 
   if (filNote) {
-    filteredData = filteredData.filter((item) => item.note.includes(filNote));
+    filteredBoard = filteredBoard.filter((item) => item.note && item.note.includes(filNote));
   }
 
-  if (filCatagory) {
-    filteredData = filteredData.filter((item) => item.catagory.includes(filCatagory));
+  if (filCategory) {
+    filteredBoard = filteredBoard.filter((item) =>
+    item.category &&item.category.includes(filCategory)
+    );
   }
 
-  res.status(200).send(filteredData);
+  res.status(200).send(filteredBoard);
 };
 
 //GetHistory
 const getHistoryList = (req, res) => {
-  res.status(200).send(history);
+  res.status(200).send(dataHistory);
 };
 
 //GetProfile
@@ -39,33 +41,35 @@ const createBoardList = (req, res) => {
     user: req.user.name,
     time: new Date().toLocaleTimeString(),
     note: req.body.note,
-    catagory: req.body.catagory,
+    category: req.body.category,
   };
-  data.push(newdata);
+  dataBoard.push(newdata);
   res.status(201).send(newdata);
 };
 
 //UpdateData
 const updateBoardList = (req, res) => {
   const targetId = String(req.params.id);
-  const targetIdx = data.findIndex((data) => data.id === targetId);
-  const owner = data[targetIdx].user === req.user.name;
-  if (owner) {
-    //Save ประวัติการแก้ไข
+  const targetIdx = dataBoard.findIndex((user) => user.id === targetId);
+  //Check เป็นเจ้าของ หรือไหม
+  const targetOwner = dataBoard[targetIdx].user === req.user.name;
+
+  if (targetOwner) {
     const historyValue = {
-      ...data[targetIdx],
+      ...dataBoard[targetIdx],
       editTime: new Date().toLocaleTimeString(),
       status: "Edit",
     };
-    history.push(historyValue);
 
-    data[targetIdx] = {
+    dataHistory.push(historyValue);
+
+    const updateData = (dataBoard[targetIdx] = {
       id: targetId,
-      user: req.user.name,
       time: new Date().toLocaleTimeString(),
       note: req.body.note,
-      catagory: req.body.catagory,
-    };
+      category: req.body.category,
+    });
+    dataBoard[targetIdx] = updateData;
     res.status(200).send({ message: "Updating is success" });
   } else {
     res.status(403).send({ message: "You are not the owner of this board" });
@@ -75,21 +79,18 @@ const updateBoardList = (req, res) => {
 //DeleteData
 const deleteBoardList = (req, res) => {
   const targetId = String(req.params.id);
-  const targetIdx = data.findIndex((data) => data.id === targetId);
-  if (targetIdx === -1) {
-    return res.status(404).send({ message: "Data mot found" });
-  }
-  const owner = data[targetIdx].user === req.user.name;
-  if (owner) {
-    //บันทึกประวัติการลบ
+  const targetIdx = dataBoard.findIndex((data) => data.id === targetId);
+
+  const targetOwner = dataBoard[targetIdx].user === req.user.name;
+  if (targetOwner) {
     const historyValue = {
-      ...data[targetIdx],
+      ...dataBoard[targetIdx],
       editTime: new Date().toLocaleTimeString(),
       status: "Delete",
     };
-    history.push(historyValue);
-    //
-    data = data.filter((data) => data.id !== targetId);
+    dataHistory.push(historyValue);
+
+    dataBoard.splice(targetIdx, 1);
     return res.status(204).send();
   } else {
     return res.status(403).send({ message: "data not found" });

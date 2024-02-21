@@ -27,7 +27,7 @@ const components = {
   },
 };
 
-export default {
+const roleRoute = {
   guest: {
     allowedRoutes: [
       { url: components.LoginPage.url, component: components.LoginPage.component },
@@ -44,3 +44,5 @@ export default {
     redirecRoutes: "/home"
   },
 };
+
+export default roleRoute;

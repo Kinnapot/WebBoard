@@ -7,6 +7,7 @@ function PrivateRoutes(props) {
 
   const allowedRoutes = ConfigRoutes[role].allowedRoutes;
   const redirecRoutes = ConfigRoutes[role].redirecRoutes;
+  
   return (
     <div>
       <Routes>

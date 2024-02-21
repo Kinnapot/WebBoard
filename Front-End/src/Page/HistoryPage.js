@@ -40,7 +40,10 @@ export default function HistoryPage() {
                       <Text strong>Note:</Text> {item.note}
                     </Col>
                     <Col span={6}>
-                      <Text strong>Category:</Text> {item.catagory}
+                      <Text strong>Category:</Text> {item.category}
+                    </Col>
+                    <Col span={6}>
+                      <Text strong>Category:</Text> {item.category}
                     </Col>
               </Row>
             )}

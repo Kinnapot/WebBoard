@@ -8,8 +8,9 @@ axios.defaults.baseURL = "http://localhost:8000";
 //ส่ง Token ไปทุกที่ ที่เรียก axios
 axios.interceptors.request.use(
   (config) => {
-    if (config.url.includes("/login") || config.url.includes("/register"))
+    if (config.url.includes("/login") || config.url.includes("/register")) {
       return config;
+    }
 
     const token = localStorageService.getToken();
 
